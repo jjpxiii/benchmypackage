@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "test": "echo test",
+    "lint": "oxlint"
   },
   "dependencies": {
     "react": "^19.0.0",

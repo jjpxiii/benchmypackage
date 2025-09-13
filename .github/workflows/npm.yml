@@ -1,0 +1,31 @@
+name: GOOOOO NPM 🐢
+
+on: [push]
+jobs:
+  extract:
+    name: GOOOOO NPM 🐢
+    runs-on: ubuntu-latest
+    # permissions:
+    #   id-token: write # Needed for auth with Deno Deploy
+    #   contents: read # Needed to clone the repository
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Setup npm
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: install from scratch
+        run: npm i --no-audit --no-fund --loglevel=error
+      - name: install one package
+        run: npm i --no-audit --no-fund --loglevel=error oxlint
+      - name: run lint
+        run: npm run lint
+      - name: run tests
+        run: npm test
+      - name: build
+        run: npm run build
+      - name: build storybook
+        run: npm run build-storybook

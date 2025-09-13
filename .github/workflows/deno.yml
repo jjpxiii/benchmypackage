@@ -1,0 +1,31 @@
+name: GOOOOO DENO 🦕
+
+on: [push]
+jobs:
+  extract:
+    name: GOOOOO DENO 🦕
+    runs-on: ubuntu-latest
+    # permissions:
+    #   id-token: write # Needed for auth with Deno Deploy
+    #   contents: read # Needed to clone the repository
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Setup deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: install from scratch
+        run: deno install
+      - name: install one package
+        run: deno install npm:oxlint
+      - name: run lint
+        run: deno run lint
+      - name: run tests
+        run: deno run test
+      - name: build
+        run: deno run build
+      - name: build storybook
+        run: deno run build-storybook

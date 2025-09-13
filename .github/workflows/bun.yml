@@ -1,0 +1,31 @@
+name: GOOOOO BUN 🍙
+
+on: [push]
+jobs:
+  extract:
+    name: GOOOOO BUN 🍙
+    runs-on: ubuntu-latest
+    # permissions:
+    #   id-token: write # Needed for auth with Deno Deploy
+    #   contents: read # Needed to clone the repository
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: install from scratch
+        run: bun install
+      - name: install one package
+        run: bun add oxlint
+      - name: run lint
+        run: bun run lint
+      - name: run tests
+        run: bun run test
+      - name: build
+        run: bun run build
+      - name: build storybook
+        run: bun run build-storybook

@@ -1,0 +1,31 @@
+name: GOOOOO PNPM 🟧
+
+on: [push]
+jobs:
+  extract:
+    name: GOOOOO PNPM 🟧
+    runs-on: ubuntu-latest
+    # permissions:
+    #   id-token: write # Needed for auth with Deno Deploy
+    #   contents: read # Needed to clone the repository
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: install from scratch
+        run: pnpm i
+      - name: install one package
+        run: pnpm add oxlint
+      - name: run lint
+        run: pnpm lint
+      - name: run tests
+        run: pnpm test
+      - name: build
+        run: pnpm build
+      - name: build storybook
+        run: pnpm build-storybook
