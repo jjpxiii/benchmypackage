@@ -33,6 +33,6 @@ jobs:
       - name: Install hyperfine
         run: cargo install --locked hyperfine
       - name: install from scratch
-        run: hyperfine --runs 4 "rm -rf node_modules && rm -rf deno.lock && deno clean && deno install" "rm -rf node_modules && rm -rf bun.lock && rm -rf ~/.bun/install/cache && bun install" "rm -rf node_modules && rm -rf pnpm-lock.yaml && pnpm cache delete && pnpm install" "rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm install --no-audit --no-fund --loglevel=error"
+        run: hyperfine --prepare "rm -rf node_modules && rm -rf deno.lock && deno clean && rm -rf bun.lock && rm -rf ~/.bun/install/cache && rm -rf pnpm-lock.yaml && pnpm cache delete && rm -rf package-lock.json && npm cache clean --force" --runs 4 "deno install" "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error"
       - name: install with node_modules and lockfile
         run: hyperfine "deno install" "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error"
