@@ -35,4 +35,4 @@ jobs:
       - name: install from scratch
         run: hyperfine --prepare "rm -rf node_modules && rm -rf deno.lock && deno clean && rm -rf bun.lock && rm -rf ~/.bun/install/cache && rm -rf pnpm-lock.yaml && pnpm cache delete && rm -rf package-lock.json && npm cache clean --force" --runs 4 "deno install" "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error"
       - name: install with node_modules and lockfile
-        run: hyperfine "deno install" "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error"
+        run: hyperfine --warmup 1 "deno install && bun install && pnpm install && npm install --no-audit --no-fund --loglevel=error" --runs 10 "deno install" "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error"
