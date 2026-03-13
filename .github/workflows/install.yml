@@ -1,0 +1,38 @@
+name: Bench them all !
+
+on: [push]
+jobs:
+  extract:
+    name: Everything !
+    runs-on: ubuntu-latest
+    # permissions:
+    #   id-token: write # Needed for auth with Deno Deploy
+    #   contents: read # Needed to clone the repository
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Setup deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Setup npm
+        uses: actions/setup-node@v5
+        with:
+          node-version: 25
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install hyperfine
+        run: cargo install --locked hyperfine
+      - name: install from scratch
+        run: hyperfine --runs 4 "rm -rf node_modules && rm -rf deno.lock && deno clean && deno install" "rm -rf node_modules && rm -rf bun.lock && rm -rf ~/.bun/install/cache && bun install" "rm -rf node_modules && rm -rf pnpm-lock.yaml && pnpm cache delete && pnpm install" "rm -rf node_modules && rm -rf package-lock.json && npm cache clean --force && npm install --no-audit --no-fund --loglevel=error"
+      - name: install with node_modules and lockfile
+        run: hyperfine "deno install" "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error"
