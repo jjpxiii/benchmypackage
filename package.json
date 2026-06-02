@@ -20,7 +20,7 @@
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "postcss": "^8",
+    "postcss": "^8.5.15",
     "tailwindcss": "^4.3.0"
   }
 }
