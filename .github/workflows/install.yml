@@ -43,3 +43,5 @@ jobs:
         run: hyperfine "deno install --frozen" "bun install --frozen-lockfile" "pnpm install --frozen-lockfile" "npm ci --no-audit --no-fund --loglevel=error"
       - name: install one package
         run: hyperfine --runs 1 "deno add npm:zod" "bun install zod" "pnpm install zod" "npm install zod --no-audit --no-fund --loglevel=error" "deno add jsr:@zod/zod"
+      - name: from scratch with v12 
+        run: hyperfine --prepare "rm -rf node_modules && rm -rf deno.lock && deno clean && rm -rf bun.lock && rm -rf ~/.bun/install/cache && rm -rf pnpm-lock.yaml && pnpm cache delete && rm -rf package-lock.json && npm cache clean --force && npm i -g pnpm@12.0.0-alpha.3" --runs 4 "deno install" "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error"
