@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { useState } from "react";
 
 const updateName = async (name: string): Promise<string> => {
-  console.log("ERGOKPERTGOP¨K");
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve("Erreur " + name);

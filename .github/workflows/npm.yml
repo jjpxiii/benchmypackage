@@ -16,7 +16,7 @@ jobs:
       - name: Setup npm
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 26
       - name: install from scratch
         run: npm i --no-audit --no-fund --loglevel=error
       - name: install one package
