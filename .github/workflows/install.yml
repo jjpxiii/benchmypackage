@@ -1,4 +1,4 @@
-name: Bench them all !
+name: Install and build them all !
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -42,3 +42,5 @@ jobs:
         run: hyperfine "deno install --frozen" "bun install --frozen-lockfile" "pnpm install --frozen-lockfile" "npm ci --no-audit --no-fund --loglevel=error"
       - name: install one package
         run: hyperfine --runs 1 "deno add npm:zod" "bun install zod" "pnpm install zod" "npm install zod --no-audit --no-fund --loglevel=error" "deno add jsr:@zod/zod"
+      - name: build
+        run: hyperfine --runs 1 "deno run build" "bun run build" "pnpm run build" "npm run build"
