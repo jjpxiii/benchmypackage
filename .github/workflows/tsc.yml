@@ -1,0 +1,44 @@
+name: Bench them all !
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on: [push]
+jobs:
+  extract:
+    name: Everything !
+    runs-on: ubuntu-latest
+    # permissions:
+    #   id-token: write # Needed for auth with Deno Deploy
+    #   contents: read # Needed to clone the repository
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+
+      - name: Setup deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Setup npm
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - uses: pnpm/setup@v1
+        with:
+          version: 11
+          runtime: node@26
+      - name: Install hyperfine
+        run: cargo install --locked hyperfine
+      - name: install from scratch
+        run: hyperfine --prepare "rm -rf node_modules && rm -rf deno.lock && deno clean && rm -rf bun.lock && rm -rf ~/.bun/install/cache && rm -rf pnpm-lock.yaml && pnpm cache delete && rm -rf package-lock.json && npm cache clean --force" --runs 4 "deno install" "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error"
+      - name: ts 6
+        run: hyperfine "deno run tsc" "bun run tsc" "pnpm tsc" "npm  run tsc"
+      - name: install one package
+        run: hyperfine --runs 1 "deno add typescript@7" "bun install typescript@7" "pnpm install typescript@7" "npm install typescript@7 --no-audit --no-fund --loglevel=error"
+      - name: ts 7
+        run: hyperfine "deno run tsc" "bun run tsc" "pnpm tsc" "npm  run tsc"
