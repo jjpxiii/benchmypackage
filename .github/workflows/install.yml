@@ -1,5 +1,8 @@
 name: Install and build them all !
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on: [push]
 jobs:
   extract:
@@ -22,7 +25,7 @@ jobs:
         with:
           node-version: 26
       - name: Setup bun
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
       - uses: pnpm/setup@v1
@@ -32,6 +35,12 @@ jobs:
       - name: Install hyperfine
         run: cargo install --locked hyperfine
       - name: install from scratch
-        run: hyperfine --prepare "rm -rf node_modules && rm -rf deno.lock && deno clean && rm -rf bun.lock && rm -rf ~/.bun/install/cache && rm -rf pnpm-lock.yaml && pnpm cache delete && rm -rf package-lock.json && npm cache clean --force" --runs 4 "deno install" "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error"
+        run: hyperfine --prepare "rm -rf node_modules && rm -rf deno.lock && deno clean && rm -rf bun.lock && rm -rf ~/.bun/install/cache && rm -rf pnpm-lock.yaml && pnpm cache delete && rm -rf package-lock.json && npm cache clean --force" --runs 1 "deno install" "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error"
       - name: build
         run: hyperfine --runs 1 "deno run build" "bun run build" "pnpm run build" "npm run build" --show-output
+      - name: install with node_modules and lockfile
+        run: hyperfine --warmup 1 "deno install && bun install && pnpm install && npm install --no-audit --no-fund --loglevel=error" --runs 10 "deno install" "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error"
+      - name: ci with node_modules and lockfile
+        run: hyperfine "deno install --frozen" "bun install --frozen-lockfile" "pnpm install --frozen-lockfile" "npm ci --no-audit --no-fund --loglevel=error"
+      - name: install one package
+        run: hyperfine --runs 1 "deno add npm:zod" "bun install zod" "pnpm install zod" "npm install zod --no-audit --no-fund --loglevel=error" "deno add jsr:@zod/zod"
