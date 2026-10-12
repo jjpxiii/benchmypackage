@@ -28,7 +28,9 @@ jobs:
       - name: Install hyperfine
         run: cargo install --locked hyperfine
       - name: install from scratch
-        run: hyperfine --prepare "rm -rf node_modules && rm -rf bun.lock && rm -rf ~/.bun/install/cache && rm -rf pnpm-lock.yaml && pnpm cache delete && rm -rf package-lock.json && npm cache clean --force" --runs 4 "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error"
+        run: hyperfine --prepare "rm -rf node_modules && rm -rf bun.lock && rm -rf ~/.bun/install/cache && rm -rf pnpm-lock.yaml && pnpm cache delete && rm -rf package-lock.json && npm cache clean --force" --runs 4 "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error" --show-output
+      - name: install with node_modules and lockfile
+        run: hyperfine --warmup 1 "bun install && pnpm install && npm install --no-audit --no-fund --loglevel=error" --runs 10 "bun install" "pnpm install" "npm install --no-audit --no-fund --loglevel=error" --show-output
       - name: ci with node_modules and lockfile
         run: hyperfine "bun install --frozen-lockfile" "pnpm install --frozen-lockfile" "npm ci --no-audit --no-fund --loglevel=error" --show-output
       - name: install one package
